@@ -1,9 +1,12 @@
 import { NextPage } from "next";
+import { useAmp } from "next/amp";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
 import { Layout } from "../components/Layout";
 import { PostLink } from "../components/PostLink";
+
+export const config = { amp: "hybrid" };
 
 const getPosts = () => [
   { id: "hello-nextjs", title: "Hello Next.js" },
@@ -18,6 +21,7 @@ interface OwnProps {
 }
 
 const Index: NextPage<OwnProps> = ({ userAgent }) => {
+  const isAmp = useAmp();
   const { query } = useRouter();
   const { data, error } = useSWR(`/api/randomQuote${query.author ? `?author=${query.author}` : ''}`, fetcher);
 
@@ -33,6 +37,10 @@ const Index: NextPage<OwnProps> = ({ userAgent }) => {
 
       <p>
         User agent: {userAgent}
+      </p>
+
+      <p>
+        This is the {isAmp ? "AMP" : "normal"} version of the site.
       </p>
 
       <main className="center">
